@@ -1,0 +1,80 @@
+#name of the pipline
+name: ci pipeline 
+
+#on pushing anything on github ci_cd will be triggered
+on: 
+   push:
+
+#giving permission to workflow
+permissions:
+   # this indicates workflow has the write permission for some form of identity token
+   id-token: write
+   # this indicates workflow has the read permission to access and read the content of the repository
+   contents: read
+
+#starting the workflow
+jobs:
+   #first workflow: integration
+   integration:
+     name: continuous integration
+     #pull the latest image of ununtu 
+     runs-on: ununtu-latest
+
+     steps:
+       #call the git hub action to pull the code from repository
+       - name: checkout code
+         uses: actions/checkout@v3
+
+       - name: lint code
+         run: echo 'linting repository'
+
+       - name: run unit tests
+         run: echo "runing unit test"
+  
+   #second workflow: built and push to ecr
+   built-and-push-ecr-image:
+       #name 
+       name: push to ecr
+       #needs indicates that the previous job should be completed successfully inorder too run this job
+       needs: integration
+       runs-on: ubuntu-latest
+
+       steps:
+        - name: checkout code
+          uses: actions/checkout@v3
+        
+        #update install into the ubuntu
+        - name: install utilities
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y jq unzip
+        # now our github will communicate with ECR
+        #before communicating with ecr first we need to communicate with AWS 
+        - name: configure aws credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              aws-region: ${{ env.AWS_REGION }}    
+
+        #connecting with ECR
+        - name: Login to amazon ecr
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
+
+        - name: build.tag and push the image to amazon ecr 
+          id: build-image
+          env:
+             ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+             ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+             AWS_REGION: ${{ secrets.AWS_REGION }}
+             IMAGE_TAG: latest
+          run: 
+            #docker build = this command builds a Docker image using the specified Dockerfile
+            #-t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG = tags the docker image with a name that includes the ECR registry, repository, and a version (tag)
+             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+             
+            #docker push = this command will push the docker image to the specified ecr repository
+             #docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
