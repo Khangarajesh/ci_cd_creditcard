@@ -18,7 +18,7 @@ jobs:
    integration:
      name: continuous integration
      #pull the latest image of ununtu 
-     runs-on: ununtu-latest
+     runs-on: ubuntu-latest
 
      steps:
        #call the git hub action to pull the code from repository
