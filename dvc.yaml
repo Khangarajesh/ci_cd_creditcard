@@ -16,14 +16,14 @@ stages:
     - train_model.seed
     - train_model.n_estimators
     - train_model.max_depth
-    outs:
-    - .\models\
-  visualize:
-    cmd: python .\src\visualization\visualize.py .\models\model.joblib .\data\processed\
-    deps:
-    - .\data\processed\
-    - .\models\model.joblib
-    - .\src\visualization\visualize.py
+    #outs:
+    #- .\models\
+  #visualize:
+  #  cmd: python .\src\visualization\visualize.py .\models\model.joblib .\data\processed\
+  #  deps:
+  #  - .\data\processed\
+  #  - .\models\model.joblib
+  #  - .\src\visualization\visualize.py
 
 
 
