@@ -6,7 +6,7 @@ WORKDIR /app_docker
 
 #copy the necessary files in the folder 
 COPY app.py /app_docker/app.py
-COPY model.joblib /app_docker/model.joblib
+COPY models/model.joblib /app_docker/model.joblib
 COPY requirements.txt /app_docker/requirements.txt
 
 #install the libraries present in requirements.txt.
