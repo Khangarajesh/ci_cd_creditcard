@@ -72,7 +72,7 @@ jobs:
              AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
              AWS_REGION: ${{ secrets.AWS_REGION }}
              IMAGE_TAG: latest
-          run: 
+          run: |
             #docker build = this command builds a Docker image using the specified Dockerfile
             #-t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG = tags the docker image with a name that includes the ECR registry, repository, and a version (tag)
              docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
