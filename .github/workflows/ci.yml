@@ -78,4 +78,4 @@ jobs:
              docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
              
             #docker push = this command will push the docker image to the specified ecr repository
-             #docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
