@@ -1,3 +1,6 @@
-import pydantic
-import joblib
-import FastAPI
+# external requirements
+fastapi
+joblib
+uvicorn
+pydantic
+scikit-learn # This is needed by joblib to read and load the model
