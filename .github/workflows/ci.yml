@@ -55,6 +55,7 @@ jobs:
           with:
               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              audience: sts.amazonaws.com
               aws-region: ${{ env.AWS_REGION }}    
 
         #connecting with ECR
